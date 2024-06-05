@@ -58,7 +58,6 @@ export async function removeFromCart(dispatch, product) {
       method: "delete",
       url: API_URL + `cart/delete-cartItem/user1/${product._id}`,
     });
-    console.log(removeAck);
     if (removeAck.data.modifiedCount == 1) {
       dispatch({ type: "REMOVE_FROM_CART", payload: product });
     } else {
