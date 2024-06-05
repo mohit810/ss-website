@@ -19,10 +19,14 @@ export async function addProductToCart(dispatch, cart, product) {
         items: [...cart, { ...product, qty: 1 }],
       },
     });
-    dispatch({
-      type: "ADD_TO_CART",
-      payload: product,
-    });
+    if (cartItems.status == 200) {
+      dispatch({
+        type: "ADD_TO_CART",
+        payload: product,
+      });
+    } else {
+      throw Error("Internal Server Error");
+    }
   } catch (error) {
     console.error(error.message);
   }
@@ -49,7 +53,20 @@ export async function updateQty(dispatch, product) {
 }
 
 export async function removeFromCart(dispatch, product) {
-  dispatch({ type: "REMOVE_FROM_CART", payload: product });
+  try {
+    const removeAck = await axios({
+      method: "delete",
+      url: API_URL + `cart/delete-cartItem/user1/${product._id}`,
+    });
+    console.log(removeAck);
+    if (removeAck.data.modifiedCount == 1) {
+      dispatch({ type: "REMOVE_FROM_CART", payload: product });
+    } else {
+      throw Error("Internal Server Error");
+    }
+  } catch (error) {
+    console.error(error.message);
+  }
 }
 
 export async function getCartItems(dispatch) {
