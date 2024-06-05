@@ -29,7 +29,23 @@ export async function addProductToCart(dispatch, cart, product) {
 }
 
 export async function updateQty(dispatch, product) {
-  dispatch({ type: "UPDATE_QTY", payload: product });
+  try {
+    const cartItems = await axios({
+      method: "patch",
+      url: API_URL + `cart/update-cart?createdBy=user1`,
+      data: {
+        _id: product._id,
+        qty: product.qty,
+      },
+    });
+    if (cartItems.status == 200) {
+      dispatch({ type: "UPDATE_QTY", payload: product });
+    } else {
+      throw Error("Internal Server Error");
+    }
+  } catch (error) {
+    console.error(error.message);
+  }
 }
 
 export async function removeFromCart(dispatch, product) {
