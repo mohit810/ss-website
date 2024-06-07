@@ -1,5 +1,5 @@
 
-# SS Innovations Website Demo
+# Website Demo
 
 This is a Basic Demo Website
 
